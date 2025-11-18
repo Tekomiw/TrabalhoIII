@@ -1,5 +1,6 @@
 package com.example.trabalhoiii.activity
 
+import android.R
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,13 +14,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.trabalhoiii.activity.adapter.AlunoAdapter
+import com.example.trabalhoiii.data.model.Aluno
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AlunoActivity : AppCompatActivity() {
-    private lateinit var db: AppDatabase
-    private lateinit var alunoDao: AlunoDao
+    private lateinit var database: DatabaseReference
     private lateinit var listViewAlunos: ListView
     private lateinit var editTextNomeAluno: EditText
     private lateinit var editTextIdadeAluno: EditText
@@ -33,13 +39,9 @@ class AlunoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_aluno)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        database = FirebaseDatabase.getInstance().reference.child("alunos")
 
-        db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "academia-db"
-        ).build()
-        alunoDao = db.alunoDao()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         listViewAlunos = findViewById(R.id.listViewAlunos)
         editTextNomeAluno = findViewById(R.id.editTextAlunoNome)
@@ -59,13 +61,7 @@ class AlunoActivity : AppCompatActivity() {
         carregarAlunos()
 
         buttonAdicionarAluno.setOnClickListener {
-            val nome = editTextNomeAluno.text.toString().trim()
-            val idade = editTextIdadeAluno.text.toString().toIntOrNull()
-            if (nome.isNotEmpty() && idade != null){
-                adicionarAluno(nome, idade)
-            }else{
-                Toast.makeText(this, "Por favor, preencha todos os campos do aluno", Toast.LENGTH_SHORT).show()
-            }
+            adicionarAluno()
         }
 
         buttonVoltarAluno.setOnClickListener {
@@ -80,29 +76,42 @@ class AlunoActivity : AppCompatActivity() {
     }
 
     private fun carregarAlunos(){
-        lifecycleScope.launch {
-            val alunos = withContext(Dispatchers.IO){
-                alunoDao.getAllAlunos()
+        database.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                listaAlunos.clear()
+                for (alunoSnapshot in snapshot.children){
+                    val aluno = alunoSnapshot.getValue(Aluno::class.java)
+                    if (aluno != null){
+                        listaAlunos.add(aluno)
+                    }
+                }
             }
-            listaAlunos.clear()
-            listaAlunos.addAll(alunos)
-            adapter.notifyDataSetChanged()
-        }
+        })
     }
 
-    private fun adicionarAluno(nome: String, idade: Int){
-        lifecycleScope.launch {
-            val novoAluno = Aluno(nome = nome, idade = idade)
-            withContext(Dispatchers.IO){
-                alunoDao.insertAluno(novoAluno)
-            }
-            withContext(Dispatchers.Main){
-                editTextNomeAluno.text.clear()
-                editTextIdadeAluno.text.clear()
-                Toast.makeText(this@AlunoActivity, "Aluno adicionado.", Toast.LENGTH_SHORT).show()
-                carregarAlunos()
+    private fun adicionarAluno(){
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_aluno, null)
+        val builder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setTitle("Adicionar Aluno")
+
+        editTextNomeAluno = dialogView.findViewById(R.layout.editTextAlunoNome)
+        editTextIdadeAluno = dialogView.findViewById(R.layout.editTextAlunoIdade)
+
+        builder.setPositiveButton("Salvar"){dialog, _ ->
+            val nome = editTextNomeAluno.text.toString()
+            val idade = editTextIdadeAluno.text.toString().toIntOrNull()
+
+            val id = database.push().key
+            val novoAluno = Aluno(id, nome, idade)
+            if (id != null){
+                database.child(id).setValue(novoAluno)
+                Toast.makeText(this, "Aluno adicionado", Toast.LENGTH_SHORT).show()
             }
         }
+
+        builder.setNegativeButton("Cancelar", null)
+        builder.create().show()
     }
 
     private fun mostrarDialogoEditar(aluno: Aluno){

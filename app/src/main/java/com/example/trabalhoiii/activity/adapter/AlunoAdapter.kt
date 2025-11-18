@@ -1,5 +1,6 @@
 package com.example.trabalhoiii.activity.adapter
 
+import android.R
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.trabalhoiii.data.model.Aluno
 
 class AlunoAdapter (
     context: Context,
