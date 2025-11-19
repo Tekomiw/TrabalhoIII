@@ -1,4 +1,4 @@
-package com.example.trabalhoiii.data.model
+package com.example.trabalhoiii.model
 
 data class Exercicio (
     val id: Int = 0,

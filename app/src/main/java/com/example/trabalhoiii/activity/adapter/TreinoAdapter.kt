@@ -1,57 +1,53 @@
 package com.example.trabalhoiii.activity.adapter
 
-import android.R
+
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageButton
+import android.widget.Button
 import android.widget.TextView
-import com.example.trabalhoiii.data.model.Aluno
-import com.example.trabalhoiii.data.model.Treino
+import com.example.trabalhoiii.R
+import com.example.trabalhoiii.activity.ExerciciosTreinoActivity
+import com.example.trabalhoiii.model.Treino
 
 class TreinoAdapter (
-    context: Context,
-    private var treinos: MutableList<Treino>,
-    private var alunos: List<Aluno>,
-    private var onEdit: (Treino) -> Unit,
-    private var onDelete: (Treino) -> Unit
-) : ArrayAdapter<Treino>(context, 0, treinos){
+    private val context: Context,
+    private val resource: Int,
+    private val treinos: List<Treino>,
+    private val onEditClick: (Treino) -> Unit,
+    private val onDeleteClick: (Treino) -> Unit
+) : ArrayAdapter<Treino>(context, resource, treinos){
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val view = convertView ?: LayoutInflater.from(context).inflate(resource, parent, false)
+
         val treino = treinos[position]
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_treino, parent, false)
 
-        val textViewNome = view.findViewById<TextView>(R.id.textViewNomeTreino)
-        val textViewObjetivo = view.findViewById<TextView>(R.id.textViewObjetivoTreino)
-        val buttonEditar = view.findViewById<ImageButton>(R.id.buttonEditarTreino)
-        val buttonDeletar = view.findViewById<ImageButton>(R.id.buttonDeletarTreino)
+        val tvNome = view.findViewById<TextView>(R.id.tvTreinoNome)
+        val buttonEditar = view.findViewById<Button>(R.id.buttonEditarTreino)
+        val buttonDeletar = view.findViewById<Button>(R.id.buttonDeletarTreino)
 
-        val aluno = alunos.firstOrNull {it.id == treino.alunoId}
+        val buttonGerenciar = view.findViewById<Button>(R.id.buttonGerenciarExercicios)
 
-        textViewObjetivo.text = treino.objetivo
-        textViewNome.text = if(aluno != null) {
-            "${treino.nome} - ${treino.objetivo} -  ${aluno.nome}"
-        } else{
-            "${treino.nome} - ${treino.objetivo}"
+        buttonGerenciar.setOnClickListener {
+            val intent = Intent(context, ExerciciosTreinoActivity::class.java)
+            intent.putExtra("treinoId", treino.id)
+            context.startActivity(intent)
         }
 
+        tvNome.text = treino.nome
+
         buttonEditar.setOnClickListener {
-            onEdit(treino)
+            onEditClick(treino)
         }
 
         buttonDeletar.setOnClickListener {
-            onDelete(treino)
+            onDeleteClick(treino)
         }
 
         return view
-    }
-
-    fun atualizarTreino(novosTreinos: List<Treino>, novosAlunos: List<Aluno>){
-        treinos.clear()
-        treinos.addAll(novosTreinos)
-        alunos = novosAlunos
-        notifyDataSetChanged()
     }
 }

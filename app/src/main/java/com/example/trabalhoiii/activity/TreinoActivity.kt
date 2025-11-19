@@ -15,192 +15,132 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.trabalhoiii.R
+import com.example.trabalhoiii.activity.adapter.AlunoAdapter
+import com.example.trabalhoiii.activity.adapter.TreinoAdapter
+import com.example.trabalhoiii.model.Aluno
+import com.example.trabalhoiii.model.Treino
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TreinoActivity : AppCompatActivity() {
-    private lateinit var db: AppDatabase
-    private lateinit var treinoDao: TreinoDao
-    private lateinit var alunoDao: AlunoDao
+    private lateinit var database: DatabaseReference
     private lateinit var listViewTreinos: ListView
-    private lateinit var editTextNomeTreino: EditText
-    private lateinit var editTextObjetivoTreino: EditText
-    private lateinit var spinnerAluno: Spinner
     private lateinit var buttonAdicionarTreino: Button
     private lateinit var buttonVoltarTreino: Button
-    private lateinit var adapter: TreinoAdapter
     private var listaTreinos: MutableList<Treino> = mutableListOf()
-    private var listaAlunos: MutableList<Aluno> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_treino)
 
+        database = FirebaseDatabase.getInstance().reference.child("treinos")
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "academia-db"
-        ).build()
-        treinoDao = db.treinoDao()
-        alunoDao = db.alunoDao()
-
-        listViewTreinos = findViewById(R.id.listViewTreinos)
-        editTextNomeTreino = findViewById(R.id.editTextTreinoNome)
-        editTextObjetivoTreino = findViewById(R.id.editTextTreinoObjetivo)
-        spinnerAluno = findViewById(R.id.spinnerAluno)
-        buttonAdicionarTreino= findViewById(R.id.buttonAdicionarTreino)
+        listViewTreinos = findViewById(R.id.listViewAlunos)
+        buttonAdicionarTreino = findViewById(R.id.buttonAdicionarTreino)
         buttonVoltarTreino = findViewById(R.id.buttonVoltarTreino)
 
-        adapter = TreinoAdapter(
-            this,
-            listaTreinos,
-            listaAlunos,
-            onEdit = {treino -> mostrarDialogoEditar(treino)},
-            onDelete = {treino -> deletarTreino(treino)}
-        )
-
-        listViewTreinos.adapter = adapter
-
         carregarTreinos()
-        carregarAlunos()
 
         buttonAdicionarTreino.setOnClickListener {
-            val nomeTreino = editTextNomeTreino.text.toString().trim()
-            val objetivoTreino = editTextObjetivoTreino.text.toString().trim()
-            val alunoSelecionado = spinnerAluno.selectedItem as Aluno
-            if (nomeTreino.isNotEmpty() && objetivoTreino.isNotEmpty() && alunoSelecionado != null){
-                adicionarTreino(nomeTreino, objetivoTreino, alunoSelecionado.id)
-            }else{
-                Toast.makeText(this, "Por favor, preencha todos os campos do treino", Toast.LENGTH_SHORT).show()
-            }
+            adicionarTreino()
         }
 
         buttonVoltarTreino.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            finish()
         }
     }
 
     private fun carregarTreinos(){
-        lifecycleScope.launch {
-            val treinos = withContext(Dispatchers.IO){
-                treinoDao.getAllTreino()
+        database.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                listaTreinos.clear()
+                for (treinoSnapshot in snapshot.children) {
+                    val treino = treinoSnapshot.getValue(Treino::class.java)
+                    if (treino != null) {
+                        listaTreinos.add(treino)
+                    }
+                }
+
+                val adapter = TreinoAdapter(
+                    this@TreinoActivity,
+                    R.layout.item_treino,
+                    listaTreinos,
+                    onEditClick = { treino ->
+                        mostrarDialogoEditar(treino)
+                    },
+                    onDeleteClick = { treino ->
+                        if (treino.id != null) {
+                            database.child(treino.id!!).removeValue()
+                            Toast.makeText(this@TreinoActivity, "Treino removido", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                )
+
+                findViewById<ListView>(R.id.listViewTreinos).adapter = adapter
             }
-            listaTreinos.clear()
-            listaTreinos.addAll(treinos)
-            adapter.notifyDataSetChanged()
-        }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@TreinoActivity, "Erro ao carregar dados", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
-    private fun carregarAlunos(){
-        lifecycleScope.launch {
-            val alunos = withContext(Dispatchers.IO){
-                alunoDao.getAllAlunos()
-            }
-            listaAlunos.clear()
-            listaAlunos.addAll(alunos)
+    private fun adicionarTreino(){
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_treino, null)
+        val builder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setTitle("Adicionar Treino")
 
-            val alunoAdapter = ArrayAdapter(this@TreinoActivity, android.R.layout.simple_spinner_item, listaAlunos)
-            alunoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerAluno.adapter = alunoAdapter
-        }
-    }
+        val etNomeTreino = dialogView.findViewById<EditText>(R.id.etNomeTreino)
+        val etObjetivoTreino = dialogView.findViewById<EditText>(R.id.etObjetivoTreino)
 
-    private fun adicionarTreino(nome: String, objetivo: String, alunoId: Int){
-        lifecycleScope.launch {
-            val novoTreino = Treino(nome = nome, objetivo = objetivo, alunoId = alunoId)
-            withContext(Dispatchers.IO){
-                treinoDao.insertTreino(novoTreino)
-            }
-            withContext(Dispatchers.Main){
-                editTextNomeTreino.text.clear()
-                editTextObjetivoTreino.text.clear()
-                Toast.makeText(this@TreinoActivity, "Treino adicionado.", Toast.LENGTH_SHORT).show()
-                carregarTreinos()
+        builder.setPositiveButton("Salvar"){dialog, _ ->
+            val nome = etNomeTreino.text.toString()
+            val objetivo = etObjetivoTreino.text.toString()
+
+            val id = database.push().key
+            val novoTreino = Treino(id, nome, objetivo, exerciciosIds = mutableListOf())
+            if (id != null){
+                database.child(id).setValue(novoTreino)
+                Toast.makeText(this, "Treino adicionado", Toast.LENGTH_SHORT).show()
             }
         }
+
+        builder.setNegativeButton("Cancelar", null)
+        builder.create().show()
     }
 
     private fun mostrarDialogoEditar(treino: Treino){
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_treino, null)
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Editar Treino")
+            .setView(dialogView)
+            .setTitle("Editar Treino")
 
-        val viewInflated = LayoutInflater.from(this).inflate(R.layout.dialog_editar_treino, null, false)
-        val inputNome = viewInflated.findViewById<EditText>(R.id.editTextEditarTreinoNome)
-        val inputObjetivo = viewInflated.findViewById<EditText>(R.id.editTextEditarTreinoObjetivo)
-        val spinnerEditarAluno = viewInflated.findViewById<Spinner>(R.id.spinnerEditarAluno)
+        val etNomeTreino = dialogView.findViewById<EditText>(R.id.etNomeTreino)
+        val etObjetivoTreino = dialogView.findViewById<EditText>(R.id.etObjetivoTreino)
 
-        inputNome.setText(treino.nome)
-        inputObjetivo.setText(treino.objetivo)
+        builder.setPositiveButton("Atualizar"){ dialog, _ ->
+            val nome = etNomeTreino.text.toString()
+            val objetivo = etObjetivoTreino.text.toString()
 
-        val alunoAdapter = ArrayAdapter(this@TreinoActivity, android.R.layout.simple_spinner_item, listaAlunos)
-        alunoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerEditarAluno.adapter = alunoAdapter
-
-        val alunoAtual = listaAlunos.firstOrNull() {it.id == treino.alunoId}
-        if(alunoAtual != null){
-            val alunoPos = alunoAdapter.getPosition(alunoAtual)
-            spinnerEditarAluno.setSelection(alunoPos)
-        }
-
-        builder.setView(viewInflated)
-
-        builder.setPositiveButton("Salvar"){ dialog, _ ->
-            val novoNome = inputNome.text.toString().trim()
-            val novoObjetivo = inputObjetivo.text.toString().trim()
-            val novoAluno = spinnerEditarAluno.selectedItem as Aluno
-
-            if (novoNome.isNotEmpty() && novoObjetivo.isNotEmpty() && novoAluno != null){
-                atualizarTreino(treino.copy(nome = novoNome, objetivo = novoObjetivo, alunoId = novoAluno.id))
-            } else{
-                Toast.makeText(this, "Os campos do treino não podem estar vazios", Toast.LENGTH_SHORT).show()
-            }
-            dialog.dismiss()
-        }
-
-        builder.setNegativeButton("Cancelar") {dialog, _ ->
-            dialog.cancel()
-        }
-
-        builder.show()
-    }
-
-    private fun atualizarTreino(treinoAtualizado: Treino){
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO){
-                treinoDao.updateTreino(treinoAtualizado)
-            }
-            withContext(Dispatchers.Main){
-                Toast.makeText(this@TreinoActivity, "Treino atualizado.", Toast.LENGTH_SHORT).show()
-                carregarTreinos()
+            val updateTreino = Treino(treino.id, nome, objetivo, treino.exerciciosIds)
+            if(treino.id != null){
+                database.child(treino.id!!).setValue(updateTreino)
+                Toast.makeText(this, "Treino atualizado", Toast.LENGTH_SHORT).show()
             }
         }
-    }
 
-    private fun deletarTreino(treino: Treino){
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Deletar treino")
-        builder.setMessage("Tem certeza que deseja deletar o treino \"${treino.nome}?")
-
-        builder.setPositiveButton("Sim") { dialog, _ ->
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO){
-                    treinoDao.deleteTreino(treino)
-                }
-                withContext(Dispatchers.Main){
-                    Toast.makeText(this@TreinoActivity, "Treino deletado.", Toast.LENGTH_SHORT).show()
-                    carregarTreinos()
-                }
-            }
-            dialog.dismiss()
-        }
-
-        builder.setNegativeButton("Não"){dialog, _ ->
-            dialog.cancel()
-        }
-
-        builder.show()
+        builder.setNegativeButton("Cancelar", null)
+        builder.create().show()
     }
 }

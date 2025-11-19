@@ -6,59 +6,28 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <LinearLayout
+    <Button
+        android:id="@+id/buttonVoltarAluno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Voltar"/>
+    
+    <Button
+        android:id="@+id/buttonAdicionarAluno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adicionar Aluno"/>
+    
+    <TextView
+        android:id="@+id/tvAlunosList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <EditText
-            android:id="@+id/editTextAlunoNome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nome do Aluno"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/editTextAlunoIdade"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Idade do Aluno"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:layout_gravity="end">
-
-            <Button
-                android:id="@+id/buttonAdicionarAluno"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Adicionar"
-                android:layout_margin="4dp"
-                android:layout_gravity="end"/>
-
-            <Button
-                android:id="@+id/buttonVoltarAluno"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Voltar"
-                android:layout_marginTop="4dp"
-                android:layout_gravity="end"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="16dp"/>
+        android:text="Lista de Alunos"/>
 
     <ListView
         android:id="@+id/listViewAlunos"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
