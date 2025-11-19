@@ -23,6 +23,10 @@
         </activity>
         <activity android:name=".activity.RegisterActivity"/>
         <activity android:name=".activity.MainActivity"/>
+        <activity android:name=".activity.ExercicioActivity"/>
+        <activity android:name=".activity.AlunoActivity"/>
+        <activity android:name=".activity.ExerciciosTreinoActivity"/>
+        <activity android:name=".activity.TreinoActivity"/>
     </application>
 
 </manifest>

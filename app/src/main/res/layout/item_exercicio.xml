@@ -7,35 +7,23 @@
     android:gravity="center_vertical">
 
     <TextView
-        android:id="@+id/textViewNomeExercicio"
+        android:id="@+id/tvExercicioNome"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Nome do Exercicio"
-        android:textSize="16sp"/>
+        android:textSize="18sp"
+        android:paddingEnd="8dp"/>
 
-    <TextView
-        android:id="@+id/textViewGrupoExercicio"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Grupo Muscular"
-        android:textSize="16sp"/>
-
-    <ImageButton
+    <Button
         android:id="@+id/buttonEditarExercicio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Editar Exercicio"
-        android:src="@drawable/baseline_edit_24"
-        android:background="?attr/selectableItemBackground"
-        android:layout_marginEnd="8dp"/>
+        android:text="Editar"/>
 
-    <ImageButton
+    <Button
         android:id="@+id/buttonDeletarExercicio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/baseline_delete_24"
-        android:contentDescription="Deletar Exercicio"
-        android:background="?attr/selectableItemBackground"/>
+        android:text="Deletar"/>
 </LinearLayout>

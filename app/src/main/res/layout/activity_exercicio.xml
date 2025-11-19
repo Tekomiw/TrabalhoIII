@@ -6,61 +6,29 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <LinearLayout
+    <Button
+        android:id="@+id/buttonVoltarExercicio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Voltar"/>
+
+    <Button
+        android:id="@+id/buttonAdicionarExercicio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adicionar Exercicio"/>
+
+    <TextView
+        android:id="@+id/tvExerciciosList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <EditText
-            android:id="@+id/editTextExercicioNome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nome do Treino"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/editTextExercicioGrupo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Grupo Muscular"/>
-
-        <Spinner
-            android:id="@+id/spinnerTreino"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:layout_gravity="end">
-
-            <Button
-                android:id="@+id/buttonAdicionarExercicio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Adicionar"
-                android:layout_margin="4dp"
-                android:layout_gravity="end"/>
-
-            <Button
-                android:id="@+id/buttonVoltarExercicio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Voltar"
-                android:layout_marginTop="4dp"
-                android:layout_gravity="end"/>
-        </LinearLayout>
-    </LinearLayout>
+        android:text="Lista de Alunos"/>
 
     <ListView
         android:id="@+id/listViewExercicios"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content"/>
+
 
 </LinearLayout>

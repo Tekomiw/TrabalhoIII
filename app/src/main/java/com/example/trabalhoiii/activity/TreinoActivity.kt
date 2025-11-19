@@ -44,7 +44,7 @@ class TreinoActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        listViewTreinos = findViewById(R.id.listViewAlunos)
+        listViewTreinos = findViewById(R.id.listViewTreinos)
         buttonAdicionarTreino = findViewById(R.id.buttonAdicionarTreino)
         buttonVoltarTreino = findViewById(R.id.buttonVoltarTreino)
 
