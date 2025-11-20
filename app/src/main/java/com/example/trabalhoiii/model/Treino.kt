@@ -4,5 +4,5 @@ data class Treino(
     val id: String? = "",
     val nome: String = "",
     val objetivo: String = "",
-    val exerciciosIds: MutableList<String> = mutableListOf()
+    var exerciciosIds: MutableList<String> = mutableListOf()
 )

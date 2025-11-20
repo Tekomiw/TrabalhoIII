@@ -26,10 +26,12 @@ class AlunoAdapter (
         val aluno = alunos[position]
 
         val tvNome = view.findViewById<TextView>(R.id.tvAlunoNome)
-        val buttonEditar = view.findViewById<Button>(R.id.buttonEditarAluno)
-        val buttonDeletar = view.findViewById<Button>(R.id.buttonDeletarAluno)
+        val tvIdade = view.findViewById<TextView>(R.id.tvAlunoIdade)
+        val buttonEditar = view.findViewById<ImageButton>(R.id.buttonEditarAluno)
+        val buttonDeletar = view.findViewById<ImageButton>(R.id.buttonDeletarAluno)
 
         tvNome.text = aluno.nome
+        tvIdade.text = aluno.idade.toString()
 
         buttonEditar.setOnClickListener {
             onEditClick(aluno)

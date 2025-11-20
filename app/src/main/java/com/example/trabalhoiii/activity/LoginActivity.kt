@@ -17,7 +17,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginButton: Button
     private lateinit var registerButton: Button
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
@@ -45,10 +45,10 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "Erro ao acessar o banco de dados", Toast.LENGTH_LONG).show()
                 }
             }
+        }
 
-            registerButton.setOnClickListener {
-                startActivity(Intent(this, RegisterActivity::class.java))
-            }
+        registerButton.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import com.example.trabalhoiii.R
 import com.example.trabalhoiii.activity.ExerciciosTreinoActivity
@@ -27,8 +28,9 @@ class TreinoAdapter (
         val treino = treinos[position]
 
         val tvNome = view.findViewById<TextView>(R.id.tvTreinoNome)
-        val buttonEditar = view.findViewById<Button>(R.id.buttonEditarTreino)
-        val buttonDeletar = view.findViewById<Button>(R.id.buttonDeletarTreino)
+        val tvObjetivo = view.findViewById<TextView>(R.id.tvTreinoObjetivo)
+        val buttonEditar = view.findViewById<ImageButton>(R.id.buttonEditarTreino)
+        val buttonDeletar = view.findViewById<ImageButton>(R.id.buttonDeletarTreino)
 
         val buttonGerenciar = view.findViewById<Button>(R.id.buttonGerenciarExercicios)
 
@@ -39,6 +41,7 @@ class TreinoAdapter (
         }
 
         tvNome.text = treino.nome
+        tvObjetivo.text = treino.objetivo
 
         buttonEditar.setOnClickListener {
             onEditClick(treino)

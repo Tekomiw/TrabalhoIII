@@ -6,24 +6,44 @@
     android:padding="8dp"
     android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tvAlunoNome"
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Nome do Aluno"
-        android:textSize="18sp"
-        android:paddingEnd="8dp"/>
+        android:orientation="vertical">
 
-    <Button
+        <TextView
+            android:id="@+id/tvAlunoNome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome do Aluno"
+            android:textSize="18sp"
+            android:paddingEnd="8dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvAlunoIdade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Idade do Aluno"
+            android:textSize="14sp"
+            android:textColor="#666666"/>
+    </LinearLayout>
+
+    <ImageButton
         android:id="@+id/buttonEditarAluno"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Editar"/>
+        android:layout_height="match_parent"
+        android:src="@drawable/baseline_edit_24"
+        android:text="Editar"
+        android:background="?attr/selectableItemBackground"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonDeletarAluno"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Deletar"/>
+        android:layout_height="match_parent"
+        android:src="@drawable/baseline_delete_24"
+        android:text="Deletar"
+        android:background="?attr/selectableItemBackground"/>
 </LinearLayout>

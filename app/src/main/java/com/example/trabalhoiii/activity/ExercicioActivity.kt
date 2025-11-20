@@ -75,7 +75,7 @@ class ExercicioActivity : AppCompatActivity() {
                     }
                 )
 
-                findViewById<ListView>(R.id.listViewTreinos).adapter = adapter
+                findViewById<ListView>(R.id.listViewExercicios).adapter = adapter
             }
 
             override fun onCancelled(error: DatabaseError) {

@@ -7,23 +7,25 @@
     android:padding="16dp">
 
     <Button
-        android:id="@+id/buttonVoltarTreino"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Voltar"/>
-
-    <Button
         android:id="@+id/buttonAdicionarTreino"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Adicionar Treino"/>
+
+    <Button
+        android:id="@+id/buttonVoltarTreino"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Voltar"/>
 
     <TextView
         android:id="@+id/tvTreinosList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lista de Treinos"/>
+        android:text="Lista de Treinos"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
 
     <ListView
         android:id="@+id/listViewTreinos"

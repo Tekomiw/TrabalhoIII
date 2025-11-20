@@ -3,13 +3,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:gravity="center">
 
     <EditText
         android:id="@+id/etusername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nome do Usuário"/>
+        android:hint="Nome"/>
 
     <EditText
         android:id="@+id/etpassword"
@@ -24,5 +25,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cadastrar"/>
+
+    <Button
+        android:id="@+id/buttonVoltarRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Voltar"/>
 
 </LinearLayout>

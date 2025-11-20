@@ -1,12 +1,15 @@
 package com.example.trabalhoiii.activity
 
 import android.os.Bundle
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.trabalhoiii.R
+import com.example.trabalhoiii.activity.adapter.ExercicioTreinoAdapter
 import com.example.trabalhoiii.model.Exercicio
 import com.example.trabalhoiii.model.Treino
 import com.google.firebase.database.DataSnapshot
@@ -24,10 +27,10 @@ class ExerciciosTreinoActivity : AppCompatActivity() {
 
     private lateinit var tvTituloTreino: TextView
     private lateinit var listViewExercicios: ListView
-    private lateinit var buttonAdicionar: Button
     private lateinit var buttonVoltar: Button
-
     private var listaExercicios: MutableList<Exercicio> = mutableListOf()
+    private lateinit var adapter: ArrayAdapter<String>
+    private var nomesExercicios: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,16 +42,18 @@ class ExerciciosTreinoActivity : AppCompatActivity() {
         dbExercicios = FirebaseDatabase.getInstance().reference.child("exercicios")
 
         tvTituloTreino = findViewById(R.id.tvTituloTreino)
-        listViewExercicios = findViewById(R.id.listViewExerciciosDoTreino)
-        buttonAdicionar = findViewById(R.id.buttonAdicionarExercicio)
         buttonVoltar = findViewById(R.id.buttonVoltarExercicioTreino)
+
+        listViewExercicios = findViewById(R.id.listViewTodosExercicios)
 
         carregarTreino()
         carregarExercicios()
 
-        buttonAdicionar.setOnClickListener {
-            Toast.makeText(this, "Tela de adicionar exercício será implementada aqui", Toast.LENGTH_SHORT).show()
-        }
+        listViewExercicios.onItemClickListener =
+            AdapterView.OnItemClickListener { _, _, position, _ ->
+                val exercicioSelecionado = listaExercicios[position]
+                adicionarExercicioAoTreino(exercicioSelecionado.id!!)
+            }
 
         buttonVoltar.setOnClickListener { finish() }
     }
@@ -56,7 +61,6 @@ class ExerciciosTreinoActivity : AppCompatActivity() {
     private fun carregarTreino() {
         dbTreinos.child(treinoId).get().addOnSuccessListener {
             treinoAtual = it.getValue(Treino::class.java)!!
-            tvTituloTreino.text = "Exercícios do Treino: ${treinoAtual.nome}"
         }
     }
 
@@ -64,24 +68,49 @@ class ExerciciosTreinoActivity : AppCompatActivity() {
         dbExercicios.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 listaExercicios.clear()
+                nomesExercicios.clear()
+
                 for (snap in snapshot.children) {
                     val ex = snap.getValue(Exercicio::class.java)
-                    if (ex != null && treinoAtual.exerciciosIds.contains(ex.id)) {
+                    if (ex != null) {
                         listaExercicios.add(ex)
+                        nomesExercicios.add(ex.nome ?: "Sem nome")
                     }
                 }
 
-                // Aqui futuramente vai o Adapter com checkbox ou lista de exercícios
+                adapter = ArrayAdapter(
+                    this@ExerciciosTreinoActivity,
+                    android.R.layout.simple_list_item_1,
+                    nomesExercicios
+                )
+
+                listViewExercicios.adapter = adapter
             }
 
             override fun onCancelled(error: DatabaseError) {}
         })
     }
 
-    fun adicionarExercicioAoTreino(exercicioId: String) {
+    private fun adicionarExercicioAoTreino(exercicioId: String) {
         if (!treinoAtual.exerciciosIds.contains(exercicioId)) {
             treinoAtual.exerciciosIds.add(exercicioId)
+
             dbTreinos.child(treinoId).setValue(treinoAtual)
+                .addOnSuccessListener {
+                    Toast.makeText(
+                        this,
+                        "Exercício adicionado ao treino!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        } else {
+            Toast.makeText(
+                this,
+                "Este exercício já está no treino!",
+                Toast.LENGTH_SHORT
+            ).show()
+
+
         }
     }
 
