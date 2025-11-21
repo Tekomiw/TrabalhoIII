@@ -1,21 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#FFFFFF">
 
-    <EditText
-        android:id="@+id/etNomeAluno"
+    <!-- Título -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nome do Aluno"/>
+        android:text="Adicionar Aluno"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#6200EE"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
 
-    <EditText
-        android:id="@+id/etIdadeAluno"
+    <!-- Nome do Aluno -->
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:hint="Idade do Aluno"/>
+        android:layout_marginBottom="16dp"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxStrokeColor="#6200EE"
+        app:hintTextColor="#6200EE">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNomeAluno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nome do Aluno"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Idade do Aluno -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxStrokeColor="#6200EE"
+        app:hintTextColor="#6200EE">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etIdadeAluno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Idade do Aluno"
+            android:inputType="number"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

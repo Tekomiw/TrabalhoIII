@@ -1,29 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:padding="24dp">
 
+    <!-- Título -->
     <TextView
         android:id="@+id/tvTituloTreino"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Exercícios do Treino"
-        android:textSize="20sp"
+        android:textSize="28sp"
         android:textStyle="bold"
-        android:paddingBottom="20dp" />
+        android:textColor="#2196F3"
+        android:gravity="center"
+        android:layout_marginBottom="32dp" />
 
-    <ListView
-        android:id="@+id/listViewTodosExercicios"
+    <!-- Lista com card -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#FFFFFF"
+        android:layout_marginBottom="16dp">
 
+        <ListView
+            android:id="@+id/listViewTodosExercicios"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="#E0E0E0"
+            android:dividerHeight="1dp"
+            android:padding="8dp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Botão voltar -->
     <Button
         android:id="@+id/buttonVoltarExercicioTreino"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Voltar" />
+        android:text="Voltar"
+        android:textColor="#757575"
+        android:backgroundTint="#F5F5F5"
+        style="@style/Widget.Material3.Button.OutlinedButton" />
 
 </LinearLayout>

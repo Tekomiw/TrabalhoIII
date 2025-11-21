@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:gravity="center_vertical">
-
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -19,8 +20,8 @@
             android:layout_height="wrap_content"
             android:text="Nome do Aluno"
             android:textSize="18sp"
-            android:paddingEnd="8dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textColor="#424242" />
 
         <TextView
             android:id="@+id/tvAlunoIdade"
@@ -28,22 +29,24 @@
             android:layout_height="wrap_content"
             android:text="Idade do Aluno"
             android:textSize="14sp"
-            android:textColor="#666666"/>
+            android:textColor="#666666" />
     </LinearLayout>
 
     <ImageButton
         android:id="@+id/buttonEditarAluno"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:src="@drawable/baseline_edit_24"
-        android:text="Editar"
-        android:background="?attr/selectableItemBackground"/>
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:tint="#6200EE"
+        android:layout_marginEnd="8dp" />
 
     <ImageButton
         android:id="@+id/buttonDeletarAluno"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:src="@drawable/baseline_delete_24"
-        android:text="Deletar"
-        android:background="?attr/selectableItemBackground"/>
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:tint="#F44336" />
+
 </LinearLayout>
