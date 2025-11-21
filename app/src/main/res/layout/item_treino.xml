@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvTreinoNome"
+            android:id="@+id/tvNomeTreino"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nome do Treino"

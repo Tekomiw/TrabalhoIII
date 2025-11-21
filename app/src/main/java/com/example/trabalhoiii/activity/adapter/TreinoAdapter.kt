@@ -27,7 +27,7 @@ class TreinoAdapter (
 
         val treino = treinos[position]
 
-        val tvNome = view.findViewById<TextView>(R.id.tvTreinoNome)
+        val tvNome = view.findViewById<TextView>(R.id.tvNomeTreino)
         val tvObjetivo = view.findViewById<TextView>(R.id.tvTreinoObjetivo)
         val buttonEditar = view.findViewById<ImageButton>(R.id.buttonEditarTreino)
         val buttonDeletar = view.findViewById<ImageButton>(R.id.buttonDeletarTreino)
