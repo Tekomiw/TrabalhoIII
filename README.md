@@ -203,8 +203,6 @@ Upload de imagens com Firebase Storage
 
 Migração para arquitetura MVVM
 
-Implementação de ViewModel + LiveData ou Flow
-
 Dark Mode
 
 #Licença
